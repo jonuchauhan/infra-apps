@@ -1,0 +1,9 @@
+auth:
+  username: postgres
+  password: {{ .POSTGRES_PASSWORD }}
+  database: appdb
+
+primary:
+  persistence:
+    enabled: true
+    size: 1Gi
