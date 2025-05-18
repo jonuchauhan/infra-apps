@@ -1,6 +1,6 @@
 auth:
   username: postgres
-  password: {{ .POSTGRES_PASSWORD }}
+  password: postgres
   database: appdb
 
 primary:
