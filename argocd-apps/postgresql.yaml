@@ -4,7 +4,6 @@ metadata:
   name: postgresql
   namespace: argocd
   annotations:
-    argocd.argoproj.io/managed-by: argocd
     argocd.argoproj.io/enable-namespace-creation: "true"
 spec:
   project: default
@@ -13,19 +12,25 @@ spec:
     chart: postgresql
     targetRevision: 12.1.5
     helm:
-      valueFiles:
-        - values.yaml
       parameters:
         - name: fullnameOverride
           value: my-postgres
-    path: ""
+        - name: auth.username
+          value: postgres
+        - name: auth.password
+          value: postgres
+        - name: auth.database
+          value: appdb
+        - name: primary.persistence.enabled
+          value: "true"
+        - name: primary.persistence.size
+          value: 1Gi
   destination:
     server: https://kubernetes.default.svc
     namespace: database
   syncPolicy:
-  automated:
-    prune: true
-    selfHeal: true
-  syncOptions:
-    - CreateNamespace=true
-
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
