@@ -5,12 +5,13 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    - directory:
-        path: argocd-apps
-        recurse: true
+    - list:
+        elements:
+          - path: argocd-apps/postgres/postgresql.yaml
+          - path: argocd-apps/jfrog/jfrog.yaml
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: '{{path.basename}}' # This might not be ideal with full paths
     spec:
       project: default
       source:
@@ -19,10 +20,10 @@ spec:
         path: '{{path}}'
         helm:
           valueFiles:
-            - '{{path}}/values.yaml' # Changed this line
+            - values.yaml # You might need to adjust this or not use it here
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{path.basename}}'
+        namespace: '{{path.basename}}' # This also might need adjustment
       syncPolicy:
         automated:
           prune: true
