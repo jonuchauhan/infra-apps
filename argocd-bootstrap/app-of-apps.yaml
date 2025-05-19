@@ -6,8 +6,8 @@ metadata:
 spec:
   generators:
     - directory:
-        recurse: true
         path: argocd-apps
+        recurse: true
   template:
     metadata:
       name: '{{path.basename}}'
@@ -17,9 +17,12 @@ spec:
         repoURL: https://github.com/jonuchauhan/infra-apps
         targetRevision: HEAD
         path: '{{path}}'
+        helm:
+          valueFiles:
+            - values.yaml
       destination:
         server: https://kubernetes.default.svc
-        namespace: argocd
+        namespace: '{{path.basename}}'
       syncPolicy:
         automated:
           prune: true
