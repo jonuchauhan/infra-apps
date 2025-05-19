@@ -19,7 +19,7 @@ spec:
         path: '{{path}}'
         helm:
           valueFiles:
-            - values.yaml
+            - '{{path}}/values.yaml' # Changed this line
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{path.basename}}'
