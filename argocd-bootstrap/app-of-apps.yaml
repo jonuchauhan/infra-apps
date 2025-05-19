@@ -8,9 +8,13 @@ spec:
     - list:
         elements:
           - name: postgresql
-            path: argocd-apps/postgres/postgresql.yaml
+            chart: postgresql
+            valueFile: apps/postgres/values.yaml
+            namespace: database
           - name: jfrog
-            path: argocd-apps/jfrog/jfrog.yaml
+            chart: artifactory
+            valueFile: apps/jfrog/values.yaml
+            namespace: jfrog
   template:
     metadata:
       name: '{{.name}}'
@@ -19,10 +23,13 @@ spec:
       source:
         repoURL: https://github.com/jonuchauhan/infra-apps
         targetRevision: HEAD
-        path: '{{.path}}' # Point to the location of the Application manifest
+        chart: '{{.chart}}'
+        helm:
+          valueFiles:
+            - '{{.valueFile}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{.name}}' # Use the name from the generator
+        namespace: '{{.namespace}}'
       syncPolicy:
         automated:
           prune: true
