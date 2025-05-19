@@ -8,10 +8,31 @@ spec:
   source:
     repoURL: https://charts.jfrog.io
     chart: artifactory
-    targetRevision: 107.59.9  # You can also use "latest" if desired
+    targetRevision: 107.59.9
     helm:
-      valueFiles:
-        - apps/jfrog/values.yaml
+      values: |
+        postgresql:
+          enabled: false
+
+        database:
+          type: postgresql
+          driver: org.postgresql.Driver
+          secrets:
+            user:
+              name: jfrog-secret
+              key: db-user
+            password:
+              name: jfrog-secret
+              key: db-password
+            url:
+              name: jfrog-secret
+              key: db-url
+
+        artifactory:
+          persistence:
+            enabled: true
+            size: 5Gi
+            storageClass: ""
   destination:
     server: https://kubernetes.default.svc
     namespace: jfrog
