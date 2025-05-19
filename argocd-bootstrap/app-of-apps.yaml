@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: infra-apps
+  name: apps-root
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/enable-namespace-creation: "true"
 spec:
   project: default
   source:
     repoURL: https://github.com/jonuchauhan/infra-apps
-    targetRevision: main
+    targetRevision: HEAD
     path: argocd-apps
-    directory:
-      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

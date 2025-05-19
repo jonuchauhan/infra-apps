@@ -4,18 +4,25 @@ metadata:
   name: postgresql
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-options: CreateNamespace=true
+    argocd.argoproj.io/managed-by: argocd
+    argocd.argoproj.io/enable-namespace-creation: "true"
 spec:
-  destination:
-    namespace: database
-    server: https://kubernetes.default.svc
+  project: default
   source:
     repoURL: https://charts.bitnami.com/bitnami
     chart: postgresql
-    targetRevision: 12.5.1
-  sources: []
-  project: default
+    targetRevision: 12.1.5
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: fullnameOverride
+          value: my-postgres
+    path: ""
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: database
   syncPolicy:
     automated:
-      prune: false
-      selfHeal: false
+      prune: true
+      selfHeal: true
