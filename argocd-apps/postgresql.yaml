@@ -15,6 +15,8 @@ spec:
       parameters:
         - name: fullnameOverride
           value: my-postgres
+        - name: auth.existingSecret
+          value: my-postgres-credentials
         - name: auth.username
           value: postgres
         - name: auth.password
