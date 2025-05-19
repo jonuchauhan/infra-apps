@@ -7,23 +7,22 @@ spec:
   generators:
     - list:
         elements:
-          - path: argocd-apps/postgres/postgresql.yaml
-          - path: argocd-apps/jfrog/jfrog.yaml
+          - name: postgresql
+            path: argocd-apps/postgres/postgresql.yaml
+          - name: jfrog
+            path: argocd-apps/jfrog/jfrog.yaml
   template:
     metadata:
-      name: '{{path.basename}}' # This might not be ideal with full paths
+      name: '{{.name}}'
     spec:
       project: default
       source:
         repoURL: https://github.com/jonuchauhan/infra-apps
         targetRevision: HEAD
-        path: '{{path}}'
-        helm:
-          valueFiles:
-            - values.yaml # You might need to adjust this or not use it here
+        path: '{{.path}}' # Point to the location of the Application manifest
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{path.basename}}' # This also might need adjustment
+        namespace: '{{.name}}' # Use the name from the generator
       syncPolicy:
         automated:
           prune: true
