@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/enable-namespace-creation: "true"
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: postgresql
+    targetRevision: 12.1.5
+    helm:
+      parameters:
+        - name: fullnameOverride
+          value: my-postgres
+        - name: auth.existingSecret
+          value: my-postgres-credentials
+        - name: auth.username
+          value: postgres
+        - name: auth.database
+          value: appdb
+        - name: primary.persistence.enabled
+          value: "true"
+        - name: primary.persistence.size
+          value: 1Gi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: database
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true

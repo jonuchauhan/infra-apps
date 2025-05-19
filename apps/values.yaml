@@ -1,9 +1,4 @@
 auth:
-  username: postgres
-  password: postgres
-  database: appdb
-
-primary:
-  persistence:
-    enabled: true
-    size: 1Gi
+  existingSecret: my-postgres-secret
+  secretKeys:
+    adminPasswordKey: postgres-password
