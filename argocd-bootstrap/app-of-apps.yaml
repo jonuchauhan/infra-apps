@@ -8,27 +8,27 @@ spec:
     - list:
         elements:
           - name: postgresql
-            chart: postgresql
-            valuesRef: values
-            valueFile: apps/postgres/values.yaml
             namespace: database
+            valuesPath: apps/postgres/values.yaml
+            chart: postgresql
+            repo: https://charts.bitnami.com/bitnami
           - name: jfrog
-            chart: artifactory
-            valuesRef: values
-            valueFile: apps/jfrog/values.yaml
             namespace: jfrog
+            valuesPath: apps/jfrog/values.yaml
+            chart: artifactory
+            repo: https://charts.jfrog.io
   template:
     metadata:
       name: '{{.name}}'
     spec:
       project: default
       sources:
-        - repoURL: https://charts.bitnami.com/bitnami
+        - repoURL: '{{.repo}}'
           chart: '{{.chart}}'
           targetRevision: HEAD
           helm:
             valueFiles:
-              - ${{.valuesRef}}/{{.valueFile}}
+              - $values/{{.valuesPath}}
         - repoURL: https://github.com/jonuchauhan/infra-apps
           targetRevision: HEAD
           ref: values
