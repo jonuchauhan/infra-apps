@@ -9,10 +9,12 @@ spec:
         elements:
           - name: postgresql
             chart: postgresql
+            valuesRef: values
             valueFile: apps/postgres/values.yaml
             namespace: database
           - name: jfrog
             chart: artifactory
+            valuesRef: values
             valueFile: apps/jfrog/values.yaml
             namespace: jfrog
   template:
@@ -20,13 +22,16 @@ spec:
       name: '{{.name}}'
     spec:
       project: default
-      source:
-        repoURL: https://github.com/jonuchauhan/infra-apps
-        targetRevision: HEAD
-        chart: '{{.chart}}'
-        helm:
-          valueFiles:
-            - '{{.valueFile}}'
+      sources:
+        - repoURL: https://charts.bitnami.com/bitnami
+          chart: '{{.chart}}'
+          targetRevision: HEAD
+          helm:
+            valueFiles:
+              - ${{.valuesRef}}/{{.valueFile}}
+        - repoURL: https://github.com/jonuchauhan/infra-apps
+          targetRevision: HEAD
+          ref: values
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{.namespace}}'
